@@ -27,24 +27,31 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => 'iBeacon Manager',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar navbar-default navbar-fixed-top',
         ],
     ]);
+
+    $items = [
+        ['label' => 'Home', 'url' => ['/site/index']],
+    ];
+
+    if(Yii::$app->user->isGuest) {
+        $items[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $items[] = ['label' => 'Register', 'url' => ['/site/register']];
+    } else {
+        $items[] = [
+            'label' => 'Logout (' . Yii::$app->user->identity->firstName . ' ' . Yii::$app->user->identity->lastName . ')',
+            'url' => ['/site/logout'],
+            'linkOptions' => ['data-method' => 'post']
+        ];
+    }
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            Yii::$app->user->isGuest ?
-                ['label' => 'Login', 'url' => ['/site/login']] :
-                [
-                    'label' => 'Logout (' . Yii::$app->user->identity->firstName . ' ' . Yii::$app->user->identity->lastName . ')',
-                    'url' => ['/site/logout'],
-                    'linkOptions' => ['data-method' => 'post']
-                ],
-        ],
+        'items' => $items,
     ]);
     NavBar::end();
     ?>

@@ -2,9 +2,11 @@
 
 namespace app\models;
 
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use Yii;
+use yii\db\Expression;
 
 class UserQuery extends ActiveQuery {
 
@@ -16,6 +18,17 @@ class UserQuery extends ActiveQuery {
 
 class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
+    public function behaviors() {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'createdAtAttribute' => 'createdAt',
+                'updatedAtAttribute' => 'updatedAt',
+                'value' => new Expression('NOW()'),
+            ],
+        ];
+    }
+
     public static function tableName() {
         return '{{%user}}';
     }
@@ -25,10 +38,23 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
     public function rules() {
         return [
-            [['email', 'password'], 'required', 'on' => 'login'],
+            ['email', 'email'],
+            [['email', 'password'], 'required', 'on' => ['login', 'register']],
             ['password', 'passwordValidator', 'on' => 'login'],
             ['rememberMe', 'safe', 'on' => 'login'],
+            [['firstName', 'lastName'], 'required', 'on' => 'register'],
+            ['email', 'registerValidator', 'on' => 'register']
         ];
+    }
+
+    public function registerValidator($attr) {
+        if($user = self::findOne(['email' => $this->$attr])) {
+            $this->addError($attr, 'Email is invalid.');
+            return false;
+        }
+
+        $this->passwordHash = Yii::$app->security->generatePasswordHash($this->password);
+        return true;
     }
 
     public function passwordValidator($attr) {
