@@ -39,14 +39,25 @@ AppAsset::register($this);
     ];
 
     if(Yii::$app->user->isGuest) {
-        $items[] = ['label' => 'Login', 'url' => ['/site/login']];
-        $items[] = ['label' => 'Register', 'url' => ['/site/register']];
+        $items = array_merge($items, [
+            ['label' => 'Login', 'url' => ['/site/login']],
+            ['label' => 'Register', 'url' => ['/site/register']]
+        ]);
     } else {
-        $items[] = [
-            'label' => 'Logout (' . Yii::$app->user->identity->firstName . ' ' . Yii::$app->user->identity->lastName . ')',
-            'url' => ['/site/logout'],
-            'linkOptions' => ['data-method' => 'post']
-        ];
+
+        $items = array_merge($items, [
+            [
+                'label' => 'iBeacons',
+                'url' => ['/beacon/list'],
+            ],
+            [
+                'label' => 'Logout (' . Yii::$app->user->identity->firstName . ' ' . Yii::$app->user->identity->lastName . ')',
+                'url' => ['/site/logout'],
+                'linkOptions' => ['data-method' => 'post']
+            ],
+        ]);
+
+
     }
 
     echo Nav::widget([
@@ -66,9 +77,10 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; <a href="mailto:ibeacon-manager@mihael.me" target="_blank">ibeacon-manager@mihael.me</a></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <p class="pull-right">
+            <a href="https://github.com/iMihael/ibeacon-manager" target="_blank">Sources on GitHub</a>
     </div>
 </footer>
 
