@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'adminEmail' => 'admin@example.com',
+    'adminEmail' => 'ibeacon@mihael.me',
+    'tableOptions' => 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB',
 ];
