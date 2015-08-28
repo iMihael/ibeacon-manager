@@ -40,8 +40,9 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
             [['firstName', 'lastName'], 'required', 'on' => ['register', 'profile']],
             ['email', 'required', 'on' => 'profile'],
             ['email', 'registerValidator', 'on' => ['register', 'profile']],
-            [['password', 'kontaktKey'], 'safe', 'on' => 'profile'],
+            [['password', 'kontaktKey', 'estimoteAppId', 'estimoteAppToken'], 'safe', 'on' => 'profile'],
             ['kontaktKey', 'required', 'on' => 'kontakt-import'],
+            [['estimoteAppId', 'estimoteAppToken'], 'required', 'on' => 'estimote-import'],
         ];
     }
 

@@ -16,13 +16,34 @@ class BeaconController extends Controller {
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['list', 'add', 'delete', 'edit', 'import-kontakt'],
+                        'actions' => ['list', 'add', 'delete', 'edit', 'import-kontakt', 'import-estimote'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
                 ],
             ],
         ];
+    }
+
+    public function actionImportEstimote() {
+        $model = Yii::$app->user->identity;
+        $model->setScenario('estimote-import');
+
+        if($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->save();
+
+            $counter = Beacon::importEstimote($model->estimoteAppId, $model->estimoteAppToken);
+
+            return $this->render('import-estimote', [
+                'model' => $model,
+                'counter' => $counter,
+            ]);
+        }
+
+
+        return $this->render('import-estimote', [
+            'model' => $model,
+        ]);
     }
 
     public function actionImportKontakt() {
@@ -77,7 +98,7 @@ class BeaconController extends Controller {
 
         return $this->render('list', [
             'dataProvider' => new ActiveDataProvider([
-                'query' => Beacon::find()->andWhere(['userId' => Yii::$app->user->id])
+                'query' => Beacon::find()->andWhere(['userId' => Yii::$app->user->id])->orderBy('updatedAt DESC')
             ]),
         ]);
 

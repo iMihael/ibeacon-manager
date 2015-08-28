@@ -65,6 +65,55 @@ class Beacon extends ActiveRecord {
         }
     }
 
+    public static function importEstimote($appId, $appToken) {
+
+        $curl = curl_init('https://cloud.estimote.com/v1/beacons');
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+            'Accept: application/json'
+        ]);
+        curl_setopt($curl, CURLOPT_USERPWD, $appId . ':' . $appToken);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        $counter = 0;
+
+        if($data = curl_exec($curl)) {
+            $data = json_decode($data, true);
+
+            foreach($data as $device) {
+
+                $id = 'est_' . $device['id'];
+
+                if(Beacon::findOne(['identifier' => $id, 'userId' => Yii::$app->user->id])) {
+                    continue;
+                }
+
+                if(Beacon::findOne([
+                    'uuid' => $device['uuid'],
+                    'major' => $device['major'],
+                    'minor' => $device['minor'],
+                    'userId' => Yii::$app->user->id,
+                ])) {
+                    continue;
+                }
+
+                $b = new Beacon();
+                $b->setScenario('create');
+                $b->setAttributes([
+                    'identifier' => $id,
+                    'uuid' => $device['uuid'],
+                    'major' => $device['major'],
+                    'minor' => $device['minor'],
+                    'userId' => Yii::$app->user->id,
+                ]);
+                $b->save();
+
+                $counter++;
+            }
+        }
+
+        return $counter;
+    }
+
     public static function importKontakt($apiKey) {
         $curl = curl_init('https://api.kontakt.io/device?orderBy=updated&maxResult=500&order=DESC');
         curl_setopt($curl, CURLOPT_HTTPHEADER, [

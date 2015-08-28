@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <p>
     <a href="<?= Url::toRoute(['/beacon/add']) ?>" class="btn btn-primary">Add iBeacon</a>
     <a href="<?= Url::toRoute(['/beacon/import-kontakt']) ?>" class="btn btn-default">Import from Kontakt.io</a>
-<!--    <button disabled class="btn btn-default">Import from Estimote</button>-->
+    <a href="<?= Url::toRoute(['/beacon/import-estimote']) ?>" class="btn btn-default">Import from Estimote.com</a>
 </p>
 
     <form method="POST">

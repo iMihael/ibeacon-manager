@@ -30,6 +30,10 @@ $this->params['breadcrumbs'][] = $this->title;
             <?= $form->field($model, 'firstName') ?>
             <?= $form->field($model, 'lastName') ?>
             <?= $form->field($model, 'kontaktKey') ?>
+
+            <?= $form->field($model, 'estimoteAppId') ?>
+            <?= $form->field($model, 'estimoteAppToken') ?>
+
             <?= $form->field($model, 'password')->passwordInput() ?>
 
             <div class="form-group">

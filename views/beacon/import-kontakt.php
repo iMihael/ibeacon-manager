@@ -12,12 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-lg-6">
 
         <?php $form = ActiveForm::begin([
-            'id' => 'register-form',
-//            'options' => ['class' => 'form-horizontal'],
-//            'fieldConfig' => [
-//                'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-7\">{error}</div>",
-//                'labelOptions' => ['class' => 'col-lg-2 control-label'],
-//            ],
+            'id' => 'import-form',
         ]); ?>
 
 
