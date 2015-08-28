@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>{pager}',
         'columns' => [
             [
-                'header' => Html::input('checkbox'),
+                'header' => Html::input('checkbox', null, null, ['id' => 'chackAll']),
                 'format' => 'raw',
                 'value' => function($model) {
                     return Html::input('checkbox', 'beacon[' . $model->id . ']', $model->id);
@@ -56,3 +56,10 @@ $this->params['breadcrumbs'][] = $this->title;
     </form>
 
 
+<script type="text/javascript">
+    $(function(){
+        $("#chackAll").change(function(e){
+            $("input[type=checkbox]").prop('checked', $(e.target).prop('checked'));
+        });
+    });
+</script>

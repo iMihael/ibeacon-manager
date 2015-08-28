@@ -96,6 +96,15 @@ class BeaconController extends Controller {
 
         $p = Yii::$app->request->post();
 
+        if(isset($p['beacon'])) {
+            $beacons = array_values($p['beacon']);
+            $beacons = Beacon::findAll(['id' => $beacons, 'userId' => Yii::$app->user->id]);
+
+            foreach($beacons as $beacon) {
+                $beacon->delete();
+            }
+        }
+
         return $this->render('list', [
             'dataProvider' => new ActiveDataProvider([
                 'query' => Beacon::find()->andWhere(['userId' => Yii::$app->user->id])->orderBy('updatedAt DESC')
