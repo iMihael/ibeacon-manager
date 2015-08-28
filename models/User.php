@@ -3,16 +3,11 @@
 namespace app\models;
 
 use yii\behaviors\TimestampBehavior;
-use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use Yii;
 use yii\db\Expression;
 
-class UserQuery extends ActiveQuery {
-
-    public function withDeleted() {
-        return $this->where = [];
-    }
+class UserQuery extends BaseQuery {
 
 }
 
@@ -42,18 +37,33 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
             [['email', 'password'], 'required', 'on' => ['login', 'register']],
             ['password', 'passwordValidator', 'on' => 'login'],
             ['rememberMe', 'safe', 'on' => 'login'],
-            [['firstName', 'lastName'], 'required', 'on' => 'register'],
-            ['email', 'registerValidator', 'on' => 'register']
+            [['firstName', 'lastName'], 'required', 'on' => ['register', 'profile']],
+            ['email', 'required', 'on' => 'profile'],
+            ['email', 'registerValidator', 'on' => ['register', 'profile']],
+            [['password', 'kontaktKey'], 'safe', 'on' => 'profile'],
+            ['kontaktKey', 'required', 'on' => 'kontakt-import'],
+        ];
+    }
+
+    public function attributeLabels() {
+        return [
+            'kontaktKey' => 'Kontakt.io API key',
         ];
     }
 
     public function registerValidator($attr) {
         if($user = self::findOne(['email' => $this->$attr])) {
-            $this->addError($attr, 'Email is invalid.');
-            return false;
+
+            if($user->id != $this->id) {
+                $this->addError($attr, 'Email is invalid.');
+                return false;
+            }
         }
 
-        $this->passwordHash = Yii::$app->security->generatePasswordHash($this->password);
+        if(!empty($this->password)) {
+            $this->passwordHash = Yii::$app->security->generatePasswordHash($this->password);
+        }
+
         return true;
     }
 
@@ -69,8 +79,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     }
 
     public static function find() {
-        $query = new UserQuery(get_called_class());
-        return $query->where(['deletedAt' => null]);
+        return new UserQuery(get_called_class());
     }
 
     /**

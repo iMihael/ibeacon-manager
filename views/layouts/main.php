@@ -51,7 +51,11 @@ AppAsset::register($this);
                 'url' => ['/beacon/list'],
             ],
             [
-                'label' => 'Logout (' . Yii::$app->user->identity->firstName . ' ' . Yii::$app->user->identity->lastName . ')',
+                'label' => Yii::$app->user->identity->firstName . ' ' . Yii::$app->user->identity->lastName,
+                'url' => ['/profile/index'],
+            ],
+            [
+                'label' => 'Logout',
                 'url' => ['/site/logout'],
                 'linkOptions' => ['data-method' => 'post']
             ],

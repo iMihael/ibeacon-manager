@@ -97,3 +97,11 @@ a.desc:after {
 .navbar-right {
     margin-right: 0;
 }
+
+.selected-delete {
+    margin-right: 5px;
+}
+
+#beacons-grid .pagination {
+    margin: 0!important;
+}

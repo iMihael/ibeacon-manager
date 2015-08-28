@@ -16,7 +16,7 @@ class BeaconController extends Controller {
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['list', 'add'],
+                        'actions' => ['list', 'add', 'delete', 'edit', 'import-kontakt'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -25,11 +25,59 @@ class BeaconController extends Controller {
         ];
     }
 
+    public function actionImportKontakt() {
+
+        $model = Yii::$app->user->identity;
+        $model->setScenario('kontakt-import');
+
+        if($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->save();
+
+            $counter = Beacon::importKontakt($model->kontaktKey);
+
+            return $this->render('import-kontakt', [
+                'model' => $model,
+                'counter' => $counter,
+            ]);
+        }
+
+        return $this->render('import-kontakt', [
+            'model' => $model,
+        ]);
+    }
+
+    public function actionDelete($id) {
+        if($beacon = Beacon::findOne(['id' => $id, 'userId' => Yii::$app->user->id])) {
+            $beacon->delete();
+            return $this->redirect(['/beacon/list']);
+        }
+
+        return $this->goBack();
+    }
+
+    public function actionEdit($id) {
+        if($beacon = Beacon::findOne(['id' => $id, 'userId' => Yii::$app->user->id])) {
+            $beacon->setScenario('edit');
+
+            if($beacon->load(Yii::$app->request->post()) && $beacon->validate()) {
+                $beacon->save();
+                return $this->goBack();
+            }
+
+            return $this->render('edit', ['model' => $beacon]);
+
+        } else {
+            return $this->goBack();
+        }
+    }
+
     public function actionList() {
+
+        $p = Yii::$app->request->post();
 
         return $this->render('list', [
             'dataProvider' => new ActiveDataProvider([
-                'query' => Beacon::find()->where(['userId' => Yii::$app->user->id])
+                'query' => Beacon::find()->andWhere(['userId' => Yii::$app->user->id])
             ]),
         ]);
 
