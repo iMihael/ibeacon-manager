@@ -30,6 +30,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
     public $rememberMe;
     public $password;
+    public $token;
 
     public function rules() {
         return [
@@ -132,5 +133,15 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     public function validatePassword($password)
     {
         return Yii::$app->security->validatePassword($password, $this->passwordHash);
+    }
+
+    public function fields() {
+        return [
+            'id',
+            'email',
+            'firstName',
+            'lastName',
+            'token',
+        ];
     }
 }

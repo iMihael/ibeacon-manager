@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'id' => 'beacons-grid',
         'dataProvider' => $dataProvider,
         'layout' => '{summary}{items}<div class="pull-left">
-    <img src="img/arrow_ltr.png">
+    <img src="/img/arrow_ltr.png">
     <button type="submit" class="btn btn-default selected-delete" >Delete Selected</button>
 </div>{pager}',
         'columns' => [

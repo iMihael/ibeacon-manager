@@ -38,6 +38,29 @@ $config = [
             ],
         ],
         'db' => require(__DIR__ . '/db.php'),
+        'response' => [
+            'formatters' => [
+                'json' => 'app\modules\v1\components\JsonFormatter'
+            ],
+        ],
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+                [
+                    'class' => \yii\rest\UrlRule::className(),
+                    'controller' => 'v1/user',
+                    'extraPatterns' => [
+                        'GET login' => 'login',
+                    ],
+                ]
+            ]
+        ],
+    ],
+    'modules' => [
+        'v1' => [
+            'class' => 'app\modules\v1\V1'
+        ],
     ],
     'params' => $params,
 ];
