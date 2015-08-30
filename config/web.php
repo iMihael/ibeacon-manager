@@ -52,7 +52,12 @@ $config = [
                     'controller' => 'v1/user',
                     'extraPatterns' => [
                         'GET login' => 'login',
+                        'POST login' => 'login'
                     ],
+                ],
+                [
+                    'class' => \yii\rest\UrlRule::className(),
+                    'controller' => 'v1/beacon',
                 ]
             ]
         ],
