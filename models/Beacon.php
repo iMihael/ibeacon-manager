@@ -8,7 +8,9 @@ use yii\db\Expression;
 use Yii;
 
 class BeaconQuery extends BaseQuery {
-
+    public function haveAccess() {
+        return $this->andWhere(['userId' => Yii::$app->user->id]);
+    }
 }
 
 class Beacon extends ActiveRecord {
@@ -173,6 +175,19 @@ class Beacon extends ActiveRecord {
 
             $this->addError($attr, 'Minor must be unique');
         }
+    }
+
+    public function fields() {
+        return [
+            'id',
+            'identifier',
+            'userId',
+            'uuid',
+            'major',
+            'minor',
+            'createdAt',
+            'updatedAt'
+        ];
     }
 
     public function attributeLabels() {
