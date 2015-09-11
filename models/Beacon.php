@@ -11,6 +11,15 @@ class BeaconQuery extends BaseQuery {
     public function haveAccess() {
         return $this->andWhere(['userId' => Yii::$app->user->id]);
     }
+
+    public function search($term) {
+        if(!empty($term)) {
+            return $this->andWhere("identifier LIKE :term OR uuid LIKE :term OR major LIKE :term OR minor LIKE :term", [
+                ':term' => "%$term%"
+            ]);
+        }
+        return $this;
+    }
 }
 
 class Beacon extends ActiveRecord {
